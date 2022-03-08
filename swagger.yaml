@@ -1,0 +1,319 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Bank API"
+  description: "This is a document to test the API"
+  contact:
+    name: "Polyon Mondal"
+    email: "polyonmondal@gmail.com"
+servers:
+  - "http://localhost:5500/"
+basePath: "/api/v1"
+tags:
+  - name: "User"
+    description: "This is user section"
+  - name: "Employee"
+    description: "This section handle employee operations"
+schemes:
+  - "http"
+  - "https"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /customer/:
+    get:
+      tags:
+        - "User"
+      summary: "Return all user's list."
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UserOutput"
+        404:
+          description: "Not Found"
+  /customer/signup:
+    post:
+      tags:
+        - "User"
+      summary: "Return new user data if operation success."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Provide valid user's data."
+          schema:
+            $ref: "#/definitions/DataInput"
+      produces:
+        - "application/json"
+      responses:
+        201:
+          description: "CREATED"
+          schema:
+            $ref: "#/definitions/UserOutput"
+        400:
+          description: "Bad Request"
+        404:
+          description: "Not Found"
+  /customer/signin:
+    post:
+      tags:
+        - "User"
+      summary: "Return a success response"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Provide login credentials."
+          schema:
+            $ref: "#/definitions/LogCredential"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+        202:
+          description: "Accepted"
+        400:
+          description: "Bad Request"
+        404:
+          description: "Not Found"
+  /customer/{id}:
+    parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        description: "Provide documents object ID"
+        type: "string"
+    get:
+      tags:
+        - "User"
+      summary: "Return a User Object refer by ObjectId"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UserOutput"
+        404:
+          description: "Not Found"
+    patch:
+      tags:
+        - "User"
+      summary: "Return updated user data if operation success."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Provide updated data."
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+              contact_no:
+                type: "string"
+      responses:
+        202:
+          description: "Accepted"
+          schema:
+            $ref: "#/definitions/UserOutput"
+        400:
+          description: "Bad Request"
+        404:
+          description: "Not Found"
+  /customer/{id}/cif/{cif}:
+    parameters:
+      - name: "id"
+        in: "path"
+        type: "string"
+        description: "Document's Object ID"
+        required: true
+      - name: "cif"
+        in: "path"
+        type: "string"
+        description: "Customer Identification File No."
+        required: true
+    patch:
+      tags:
+        - "User"
+      summary: "Return a success response"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Provide user email and new password."
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
+      responses:
+        202:
+          description: "Accepted"
+          schema:
+            $ref: "#/definitions/UserOutput"
+        400:
+          description: "Bad Request"
+        404:
+          description: "Not Found"
+    delete:
+      tags:
+        - "User"
+      summary: "Return a success response"
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: "Bad Request"
+        404:
+          description: "Not Found"
+  /employee/:
+    get:
+      tags:
+        - "Employee"
+      summary: "Return all employee's list."
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/EmpOutput"
+        404:
+          description: "Not Found"
+  /employee/signin:
+    post:
+      tags:
+        - "Employee"
+      summary: "Return a success response"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Provide login credentials."
+          schema:
+            $ref: "#/definitions/LogCredential"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+        202:
+          description: "Accepted"
+        400:
+          description: "Bad Request"
+        404:
+          description: "Not Found"
+  /employee/{id}:
+    parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        description: "Provide documents object ID"
+        type: "string"
+    get:
+      tags:
+        - "Employee"
+      summary: "Return a User Object refer by ObjectId"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/EmpOutput"
+        404:
+          description: "Not Found"
+    patch:
+      tags:
+        - "Employee"
+      summary: "Return updated user data if operation success."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Provide updated data."
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+              contact_no:
+                type: "string"
+      responses:
+        202:
+          description: "Accepted"
+          schema:
+            $ref: "#/definitions/EmpOutput"
+        400:
+          description: "Bad Request"
+        404:
+          description: "Not Found"
+  /employee/block/customer/{id}:
+    patch:
+      tags:
+        - "Employee"
+      summary: "Return a success response"
+      parameters:
+        - in: "path"
+          name: "Customer ID"
+          describtion: "Provide customer ID"
+          required: true
+      responses:
+        200:
+          description: "OK"
+        404:
+          description: "Bad Request"
+        423:
+          description: "Locked"
+          schema:
+            $ref: "#/definitions/UserOutput"
+definitions:
+  LogCredential:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+  DataInput:
+    type: "object"
+    properties:
+      full_name:
+        type: "string"
+      email:
+        type: "string"
+      contact_no:
+        type: "string"
+      password:
+        type: "string"
+  UserOutput:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+      full_name:
+        type: "string"
+      email:
+        type: "string"
+      contact_no:
+        type: "string"
+      CIF_No:
+        type: "string"
+      password:
+        type: "string"
+      status:
+        type: "string"
+      createdAt:
+        type: "string"
+  EmpOutput:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+      full_name:
+        type: "string"
+      email:
+        type: "string"
+      contact_no:
+        type: "string"
+      password:
+        type: "string"
+      status:
+        type: "string"
+      createdAt:
+        type: "string"
