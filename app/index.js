@@ -51,7 +51,7 @@ const CorsOptions = {
   },
 };
 
-app.use(cors());
+app.use(cors(CorsOptions));
 app.use(xss());
 jsonToYaml();
 const swaggerDoc = YAML.load("./swagger.yaml");
